@@ -325,7 +325,60 @@ function App() {
     }
   }, [route])
 
-  return route === 'reserve' ? <ReservePage /> : <Catalogue />
+  return (
+    <>
+      {route === 'reserve' ? <ReservePage /> : <Catalogue />}
+      <OverflowProbe />
+    </>
+  )
+}
+
+function OverflowProbe() {
+  const [report, setReport] = useState<string[]>([])
+  const [visible, setVisible] = useState(true)
+
+  useEffect(() => {
+    if (window.location.port !== '3000' && !new URLSearchParams(window.location.search).has('debug')) return
+    let prevSignature = ''
+    const scan = () => {
+      const viewportWidth = document.documentElement.clientWidth
+      const offenders: string[] = []
+      for (const element of document.body.querySelectorAll('*')) {
+        if (element.closest('#rb-probe')) continue
+        const rect = element.getBoundingClientRect()
+        if (rect.width > viewportWidth + 1 || rect.right > viewportWidth + 1) {
+          const rawClassValue = (element as HTMLElement).className
+          const classes = typeof rawClassValue === 'string' ? rawClassValue : ((rawClassValue as SVGAnimatedString | null)?.baseVal ?? '')
+          const mainClass = classes.trim().split(/\s+/)[0] ?? ''
+          offenders.push(`<${element.tagName.toLowerCase()}${mainClass ? '.' + mainClass : ''}> w=${Math.round(rect.width)} right=${Math.round(rect.right)} vw=${viewportWidth}`)
+          if (offenders.length >= 10) break
+        }
+      }
+      const signature = offenders.join('|')
+      if (signature !== prevSignature) {
+        prevSignature = signature
+        setReport(offenders)
+      }
+    }
+    scan()
+    const timer = window.setInterval(scan, 1500)
+    window.addEventListener('resize', scan)
+    window.addEventListener('scroll', scan, { passive: true })
+    return () => {
+      window.clearInterval(timer)
+      window.removeEventListener('resize', scan)
+      window.removeEventListener('scroll', scan)
+    }
+  }, [])
+
+  if (!report.length || !visible) return null
+  return (
+    <div id="rb-probe" aria-hidden="true" style={{ position: 'fixed', left: 10, bottom: 10, zIndex: 9999, maxWidth: 'min(94vw, 430px)', maxHeight: '48vh', overflow: 'auto', padding: '12px 26px 12px 12px', borderRadius: 12, background: 'rgba(191, 34, 34, .95)', color: 'white', font: '600 10px/1.6 monospace', boxShadow: '0 12px 34px rgba(0,0,0,.4)' }}>
+      <button type="button" aria-label="Fermer le rapport" onClick={() => setVisible(false)} style={{ position: 'absolute', top: 4, right: 8, border: 0, background: 'transparent', color: 'white', cursor: 'pointer', fontSize: 16, lineHeight: 1 }}>×</button>
+      <strong style={{ display: 'block', marginBottom: 6 }}>{report.length} élément(s) hors viewport :</strong>
+      {report.map((line) => <div key={line} style={{ whiteSpace: 'nowrap' }}>{line}</div>)}
+    </div>
+  )
 }
 
 export default App
