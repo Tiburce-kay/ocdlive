@@ -1072,3 +1072,8 @@ textarea.rb-field__input { min-height: 74px; resize: vertical; line-height: 1.6;
     scroll-behavior: auto !important;
   }
 }
+
+/* Champs tactiles : police 16px minimum pour éviter le zoom iOS au focus */
+@media (pointer: coarse) {
+  .rb-field__input, .rb-datelink input { font-size: 16px; }
+}

@@ -157,7 +157,7 @@ function Catalogue() {
       <header className="store-header" id="top">
         <div className="store-shell header-main">
           <Brand />
-          <form className="search-field" role="search" onSubmit={(event) => { event.preventDefault(); document.getElementById('catalogue')?.scrollIntoView({ behavior: 'smooth' }) }}>
+          <form className="search-field" role="search" onSubmit={(event) => { event.preventDefault(); event.currentTarget.querySelector('input')?.blur(); document.getElementById('catalogue')?.scrollIntoView({ behavior: 'smooth' }) }}>
             <Icon name="search" size={19} />
             <label className="sr-only" htmlFor="offer-search">Rechercher parmi les formules</label>
             <input id="offer-search" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="Rechercher parmi les formules" />
@@ -188,6 +188,7 @@ function Catalogue() {
             <a href="#catalogue" onClick={() => chooseCategory('announcement')}>Visibilité & annonces</a>
             <a href="#process">Comment ça marche</a>
             <a href="#faq">Questions fréquentes</a>
+            <a className="nav-help-link" href={whatsappUrl} target="_blank" rel="noreferrer"><Icon name="message" size={13} /> Une question ? Écris-nous</a>
             <span className="nav-note">Lomé ou à distance <i /></span>
           </div>
         </nav>
