@@ -342,9 +342,15 @@ function OverflowProbe() {
     let prevSignature = ''
     const scan = () => {
       const viewportWidth = document.documentElement.clientWidth
+      const clippers: Element[] = []
+      for (const element of document.body.querySelectorAll('*')) {
+        const overflowValue = getComputedStyle(element).overflowX
+        if (overflowValue === 'auto' || overflowValue === 'scroll' || overflowValue === 'hidden' || overflowValue === 'clip') clippers.push(element)
+      }
       const offenders: string[] = []
       for (const element of document.body.querySelectorAll('*')) {
         if (element.closest('#rb-probe')) continue
+        if (clippers.some((clipper) => clipper !== element && clipper.contains(element))) continue
         const rect = element.getBoundingClientRect()
         if (rect.width > viewportWidth + 1 || rect.right > viewportWidth + 1) {
           const rawClassValue = (element as HTMLElement).className
