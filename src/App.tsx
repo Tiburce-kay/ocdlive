@@ -1,9 +1,9 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { faqs, packs, reservationUrl, whatsappUrl, type Pack } from './data'
 import ReservePage from './ReservePage'
 
 type CategoryId = 'all' | 'short' | 'long' | 'announcement' | 'sales' | 'monthly'
-type IconName = Pack['icon'] | 'arrow' | 'check' | 'chevron' | 'clock' | 'message' | 'pin' | 'play' | 'search' | 'spark'
+type IconName = Pack['icon'] | 'arrow' | 'check' | 'chevron' | 'clock' | 'message' | 'pin' | 'play' | 'search' | 'spark' | 'user' | 'userplus'
 
 const categories: { id: CategoryId; label: string; icon: IconName }[] = [
   { id: 'all', label: 'Toutes les formules', icon: 'spark' },
@@ -38,6 +38,8 @@ function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
     shop: <><path d="M3 9 5 4h14l2 5" /><path d="M4 9v11h16V9" /><path d="M9 20v-6h6v6" /><path d="M3 9a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0" /></>,
     video: <><rect x="3" y="5" width="13" height="14" rx="2" /><path d="m16 10 5-3v10l-5-3" /><path d="m8 10 4 2-4 2z" /></>,
     calendar: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 10h18" /><path d="m8 15 2 2 5-5" /></>,
+    user: <><circle cx="12" cy="8" r="3.4" /><path d="M5 20a7 7 0 0 1 14 0" /></>,
+    userplus: <><circle cx="10" cy="8" r="3.4" /><path d="M3.5 20a6.5 6.5 0 0 1 13 0" /><path d="M18 5.5v5m2.5-2.5h-5" /></>,
   }
 
   return (
@@ -87,6 +89,24 @@ function Catalogue() {
   const [searchTerm, setSearchTerm] = useState('')
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [accountOpen, setAccountOpen] = useState(false)
+  const accountRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!accountOpen) return
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (!accountRef.current?.contains(event.target as Node)) setAccountOpen(false)
+    }
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setAccountOpen(false)
+    }
+    document.addEventListener('mousedown', closeOnOutsideClick)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('mousedown', closeOnOutsideClick)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [accountOpen])
 
   const normalizedSearch = searchTerm.trim().toLocaleLowerCase('fr').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   const visiblePacks = packs.filter((pack) => {
@@ -146,8 +166,17 @@ function Catalogue() {
           </form>
           <div className="header-actions">
             <a className="header-help" href={whatsappUrl} target="_blank" rel="noreferrer"><span className="help-icon"><Icon name="message" size={18} /></span><span><small>UN CONSEIL ?</small><strong>Parle à l’équipe</strong></span></a>
-            <a className="header-auth header-auth--signin" href="/connexion">Connexion</a>
-            <a className="header-auth header-auth--join" href="/inscription">Inscription</a>
+            <div className="auth-drop" ref={accountRef}>
+              <button type="button" className="auth-toggle" aria-haspopup="menu" aria-expanded={accountOpen} aria-label="Mon compte — se connecter ou s’inscrire" onClick={() => setAccountOpen(current => !current)}>
+                <Icon name="user" size={19} />
+              </button>
+              {accountOpen && (
+                <div className="auth-menu" role="menu" aria-label="Options de compte">
+                  <a role="menuitem" href="/connexion" onClick={() => setAccountOpen(false)}><Icon name="user" size={15} /><span><strong>Se connecter</strong><small>Accéder à mon espace</small></span></a>
+                  <a role="menuitem" href="/inscription" onClick={() => setAccountOpen(false)}><Icon name="userplus" size={15} /><span><strong>S’inscrire</strong><small>Créer mon compte OCD Live</small></span></a>
+                </div>
+              )}
+            </div>
             <a className="header-book" href={reservationUrl()}>Réserver <Icon name="arrow" size={16} /></a>
           </div>
           <button className={`menu-toggle ${menuOpen ? 'menu-toggle--open' : ''}`} aria-label={menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /><span /></button>
@@ -159,8 +188,6 @@ function Catalogue() {
             <a href="#catalogue" onClick={() => chooseCategory('announcement')}>Visibilité & annonces</a>
             <a href="#process">Comment ça marche</a>
             <a href="#faq">Questions fréquentes</a>
-            <a className="nav-auth-link nav-auth-link--signin" href="/connexion">Connexion</a>
-            <a className="nav-auth-link nav-auth-link--join" href="/inscription">Inscription</a>
             <span className="nav-note">Lomé ou à distance <i /></span>
           </div>
         </nav>
