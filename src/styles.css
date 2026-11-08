@@ -56,7 +56,12 @@ img { display: block; max-width: 100%; }
 .search-submit, .clear-search { flex: 0 0 auto; width: 31px; height: 31px; display: grid; place-items: center; border: 0; border-radius: 9px; color: white; background: var(--orange); cursor: pointer; transition: background .2s ease, transform .2s ease; }
 .search-submit:hover { background: var(--orange-hover); transform: translateY(-1px); }
 .clear-search { width: 25px; height: 25px; color: #777; background: #ececf0; font-size: 18px; line-height: 1; }
-.header-actions { display: flex; align-items: center; gap: 18px; }
+.header-actions { display: flex; align-items: center; gap: 13px; }
+.header-auth { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 42px; padding: 0 14px; font-size: 10.5px; font-weight: 700; white-space: nowrap; transition: color .18s ease, border-color .18s ease, background .18s ease; }
+.header-auth--signin { color: #43424e; }
+.header-auth--signin:hover { color: var(--orange); }
+.header-auth--join { border: 1.5px solid #dcdce3; border-radius: 10px; color: var(--ink); background: white; }
+.header-auth--join:hover { border-color: var(--orange); color: var(--orange); }
 .header-help { display: flex; align-items: center; gap: 9px; }
 .help-icon { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid #e8e8ed; border-radius: 10px; color: var(--green); background: white; }
 .header-help span:last-child { display: flex; flex-direction: column; gap: 2px; }
@@ -65,6 +70,7 @@ img { display: block; max-width: 100%; }
 .header-book { min-height: 42px; padding: 0 15px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 1px solid var(--orange); border-radius: 10px; color: white; background: var(--orange); box-shadow: 0 5px 12px rgba(219,97,34,.14); font-size: 11px; font-weight: 700; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; }
 .header-book:hover { transform: translateY(-2px); background: var(--orange-hover); box-shadow: 0 8px 16px rgba(219,97,34,.24); }
 .menu-toggle { display: none; }
+.nav-auth-link { display: none; }
 .store-nav { border-top: 1px solid #f1f1f3; }
 .store-nav-inner { min-height: 45px; display: flex; align-items: center; gap: 32px; }
 .store-nav a { color: #555663; font-size: 10px; font-weight: 600; transition: color .18s ease; }
@@ -285,6 +291,7 @@ html.js-motion [data-reveal].in-view { opacity: 1; transform: translateY(0); }
   .store-shell { width: min(100% - 40px,1280px); }
   .header-main { gap: 22px; }
   .header-help { display: none; }
+  .header-auth--signin { display: none; }
   .store-nav-inner { gap: 24px; }
   .hero-banner { padding-inline: 42px; }
   .catalog-layout { grid-template-columns: 205px minmax(0,1fr); gap: 17px; }
@@ -351,6 +358,7 @@ html.js-motion [data-reveal].in-view { opacity: 1; transform: translateY(0); }
   .brand-mark i { width: 15px; height: 15px; border-width: 2.5px; }
   .brand-word { font-size: 17px; }
   .header-actions { grid-column: 2; grid-row: 1; }
+  .header-auth { display: none; }
   .header-book { min-height: 34px; padding: 0 10px; gap: 5px; font-size: 8px; }
   .header-book svg { width: 13px; height: 13px; }
   .menu-toggle { grid-column: 3; grid-row: 1; width: 34px; height: 34px; padding: 7px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: 1px solid #e8e8ed; border-radius: 8px; background: white; cursor: pointer; }
@@ -365,6 +373,8 @@ html.js-motion [data-reveal].in-view { opacity: 1; transform: translateY(0); }
   .store-nav-inner { width: 100%; padding: 5px 17px 10px; display: flex; flex-direction: column; align-items: stretch; gap: 0; }
   .store-nav a, .store-nav .nav-catalogue { min-height: 38px; padding: 0 2px; border-bottom: 1px solid #f1f1f3; font-size: 9px; }
   .store-nav .nav-catalogue { order: -1; }
+  .nav-auth-link { display: flex; align-items: center; min-height: 38px; padding: 0 2px; border-bottom: 1px solid #f1f1f3; font-size: 9px; font-weight: 700; color: #43424e; }
+  .nav-auth-link--join { color: var(--orange); }
   .store-hero { padding: 15px 0 15px; }
   .hero-banner { min-height: 56vh; padding: 26px 20px 24px; border-radius: 15px; }
   .hero-glass-badge { margin-bottom: 16px; padding: 7px 11px; font-size: 7px; }

@@ -146,6 +146,8 @@ function Catalogue() {
           </form>
           <div className="header-actions">
             <a className="header-help" href={whatsappUrl} target="_blank" rel="noreferrer"><span className="help-icon"><Icon name="message" size={18} /></span><span><small>UN CONSEIL ?</small><strong>Parle à l’équipe</strong></span></a>
+            <a className="header-auth header-auth--signin" href="/connexion">Connexion</a>
+            <a className="header-auth header-auth--join" href="/inscription">Inscription</a>
             <a className="header-book" href={reservationUrl()}>Réserver <Icon name="arrow" size={16} /></a>
           </div>
           <button className={`menu-toggle ${menuOpen ? 'menu-toggle--open' : ''}`} aria-label={menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /><span /></button>
@@ -157,6 +159,8 @@ function Catalogue() {
             <a href="#catalogue" onClick={() => chooseCategory('announcement')}>Visibilité & annonces</a>
             <a href="#process">Comment ça marche</a>
             <a href="#faq">Questions fréquentes</a>
+            <a className="nav-auth-link nav-auth-link--signin" href="/connexion">Connexion</a>
+            <a className="nav-auth-link nav-auth-link--join" href="/inscription">Inscription</a>
             <span className="nav-note">Lomé ou à distance <i /></span>
           </div>
         </nav>
