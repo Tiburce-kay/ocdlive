@@ -132,4 +132,4 @@ export const faqs = [
 export const reservationUrl = (pack?: string) =>
   `/reserver${pack ? `?pack=${encodeURIComponent(pack)}` : ''}`
 
-export const whatsappUrl = 'https://wa.me/22890000000'
+export const whatsappUrl = 'https://wa.me/2250586868619'
